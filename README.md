@@ -6,12 +6,6 @@
 - **Strategy doc:** [CoreOS Windows OS Platform FY27 Strategy.docx](https://microsoft.sharepoint-df.com/teams/AEPWindowsPlanning/_layouts/15/Doc.aspx?sourcedoc=%7B5DA62D23-4A29-403A-BA02-756454093318%7D&file=CoreOS%20Windows%20OS%20Platform%20FY27%20Strategy.docx)
 - **Merged:** 2026-07-19
 
-## Merged from live tracker
-- Added **SFI/MSRCs (due to AI)** as its own KR under O1 · fixed **SRV → SFI**.
-- Promoted **Neo compete** to its own objective under Win vs Mac (Memory Mgmt + MPTF as its 2 KRs).
-- Reframed **Cross-Device** KR to tracker scope: "Apple AWDL, Intel-Based Windows, EOY 2026."
-- Added **Owner (DRI)** column and **Status** chip from the Aug 2026 tracker view.
-
 ## Roll-up
 
 | Pillars | Objectives | KRs | On Track | At Risk | Awaiting |
