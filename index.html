@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoreOS FY27 OKRs — Compared (Merged)</title>
+<style>
+  :root {
+    --win-bg: #f3f3f3; --win-surface: #ffffff; --win-surface-alt: #fafafa;
+    --win-border: #e5e5e5; --win-border-strong: #d1d1d1;
+    --win-text: #1b1b1b; --win-text-muted: #605e5c; --win-text-soft: #8a8886;
+    --win-accent: #0078d4; --win-accent-hover: #106ebe; --win-accent-dark: #0f3b69;
+    --win-accent-soft: #deecf9; --win-accent-soft-2: #eff6fc;
+    --win-biz: #0078d4; --win-biz-soft: #e1f0ff; --win-eng-soft: #f3f2f1;
+    --win-ontrack: #107c10; --win-ontrack-soft: #dff6dd;
+    --win-atrisk: #c42b1c; --win-atrisk-soft: #fde7e9;
+    --win-waiting: #8a6100; --win-waiting-soft: #fff4ce;
+    --win-tbv: #c42b1c;
+    --win-shadow-card: 0 2px 4px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+    --win-radius: 8px; --win-radius-lg: 12px;
+    --win-font: "Segoe UI Variable", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --win-bg: #202020; --win-surface: #2b2b2b; --win-surface-alt: #323232;
+      --win-border: #3a3a3a; --win-border-strong: #484848;
+      --win-text: #f3f3f3; --win-text-muted: #c8c6c4; --win-text-soft: #a19f9d;
+      --win-accent: #4cc2ff; --win-accent-dark: #a0d7ff;
+      --win-accent-soft: #1a3548; --win-accent-soft-2: #22394d;
+      --win-biz: #4cc2ff; --win-biz-soft: #1a3548; --win-eng-soft: #363636;
+      --win-ontrack: #6ccb5f; --win-ontrack-soft: #223e1e;
+      --win-atrisk: #ff6b60; --win-atrisk-soft: #3d1f22;
+      --win-waiting: #ffcc55; --win-waiting-soft: #3d3320;
+      --win-tbv: #ff6b60;
+      --win-shadow-card: 0 2px 4px rgba(0,0,0,0.3);
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: var(--win-bg); color: var(--win-text); font-family: var(--win-font); font-size: 14px; line-height: 1.5; }
+  .page { max-width: 1280px; margin: 0 auto; padding: 32px 40px 80px; }
+  .app-bar { background: var(--win-surface); border-bottom: 1px solid var(--win-border); padding: 12px 40px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 10; }
+  .app-bar .logo { width: 24px; height: 24px; display: grid; grid-template: 1fr 1fr / 1fr 1fr; gap: 2px; }
+  .app-bar .logo span { background: var(--win-accent); border-radius: 1px; }
+  .app-bar .title { font-weight: 600; font-size: 14px; }
+  .app-bar .sub { color: var(--win-text-muted); font-size: 13px; }
+  .app-bar .spacer { flex: 1; }
+  .app-bar a { color: var(--win-accent); text-decoration: none; font-size: 12px; font-weight: 500; margin-left: 12px; }
+  .hero { background: linear-gradient(135deg, var(--win-accent-soft-2) 0%, var(--win-surface) 100%); border: 1px solid var(--win-border); border-radius: var(--win-radius-lg); padding: 28px 32px; margin-bottom: 20px; box-shadow: var(--win-shadow-card); }
+  .hero h1 { margin: 0 0 8px; font-size: 30px; font-weight: 600; color: var(--win-accent-dark); letter-spacing: -0.02em; }
+  .hero .lede { color: var(--win-text-muted); font-size: 15px; max-width: 860px; margin: 0 0 16px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: var(--win-surface); border: 1px solid var(--win-border-strong); font-size: 12px; color: var(--win-text-muted); font-weight: 500; }
+  .badge.accent { background: var(--win-accent-soft); border-color: var(--win-accent); color: var(--win-accent-dark); }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 24px; }
+  .stat { background: var(--win-surface); border: 1px solid var(--win-border); border-radius: var(--win-radius); padding: 12px 16px; box-shadow: var(--win-shadow-card); }
+  .stat .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--win-text-soft); font-weight: 600; }
+  .stat .value { font-size: 26px; font-weight: 600; color: var(--win-accent-dark); }
+  .stat.ontrack .value { color: var(--win-ontrack); }
+  .stat.atrisk .value { color: var(--win-atrisk); }
+  .stat.waiting .value { color: var(--win-waiting); }
+  .legend { background: var(--win-surface); border: 1px solid var(--win-border); border-radius: var(--win-radius); padding: 12px 18px; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; font-size: 13px; color: var(--win-text-muted); }
+  .legend .star { color: var(--win-tbv); font-weight: 700; font-size: 16px; margin-right: 4px; }
+  .pillar { margin: 28px 0 20px; }
+  .pillar-head { display: flex; align-items: center; gap: 16px; padding: 16px 22px; background: var(--win-accent); color: #fff; border-radius: var(--win-radius-lg) var(--win-radius-lg) 0 0; box-shadow: var(--win-shadow-card); }
+  .pillar-head .num { font-size: 26px; font-weight: 300; opacity: 0.75; line-height: 1; }
+  .pillar-head .title { font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
+  .pillar-head .kr-count { margin-left: auto; font-size: 12px; opacity: 0.9; }
+  .pillar-body { background: var(--win-surface); border: 1px solid var(--win-border); border-top: none; border-radius: 0 0 var(--win-radius-lg) var(--win-radius-lg); padding: 16px 20px 20px; }
+  .obj { margin: 14px 0; padding: 14px 16px; border: 1px solid var(--win-border); border-left: 4px solid var(--win-accent); border-radius: var(--win-radius); background: var(--win-surface-alt); }
+  .obj:first-child { margin-top: 4px; }
+  .obj h3 { margin: 0 0 4px; font-size: 15px; font-weight: 600; color: var(--win-text); }
+  .obj .src { font-size: 11px; color: var(--win-text-muted); font-style: italic; margin-bottom: 10px; }
+  .obj .src a { color: var(--win-accent); text-decoration: none; font-style: normal; font-weight: 500; }
+  table.kr { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--win-surface); border-radius: 6px; overflow: hidden; }
+  table.kr th { text-align: left; padding: 8px 10px; background: var(--win-accent-soft); color: var(--win-accent-dark); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid var(--win-border-strong); }
+  table.kr td { padding: 9px 10px; border-bottom: 1px solid var(--win-border); vertical-align: top; }
+  table.kr tr:last-child td { border-bottom: none; }
+  table.kr .id { font-weight: 600; color: var(--win-text); white-space: nowrap; }
+  table.kr .target { color: var(--win-text); font-weight: 500; }
+  table.kr .tbv-star { color: var(--win-tbv); font-weight: 700; font-size: 15px; margin-left: 3px; }
+  table.kr .owner { font-size: 12px; }
+  table.kr .owner .avatar { display: inline-block; width: 22px; height: 22px; border-radius: 50%; background: var(--win-accent-soft); color: var(--win-accent-dark); font-size: 10px; font-weight: 700; text-align: center; line-height: 22px; margin-right: 6px; vertical-align: middle; }
+  .status { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+  .status.ontrack { background: var(--win-ontrack-soft); color: var(--win-ontrack); }
+  .status.atrisk { background: var(--win-atrisk-soft); color: var(--win-atrisk); }
+  .status.waiting { background: var(--win-waiting-soft); color: var(--win-waiting); }
+  .changes { background: var(--win-ontrack-soft); border: 1px solid var(--win-ontrack); border-radius: var(--win-radius); padding: 16px 20px; margin-bottom: 20px; }
+  .changes h3 { margin: 0 0 6px; font-size: 15px; color: var(--win-text); }
+  .changes ul { margin: 6px 0 0; padding-left: 20px; font-size: 13px; color: var(--win-text); }
+  .changes li { margin-bottom: 4px; }
+  footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--win-border); color: var(--win-text-soft); font-size: 12px; text-align: center; }
+  footer a { color: var(--win-accent); text-decoration: none; }
+  @media (max-width: 900px) {
+    .page { padding: 20px; } .hero { padding: 22px; } .hero h1 { font-size: 24px; }
+    .app-bar { padding: 10px 20px; } table.kr { font-size: 12px; }
+    table.kr th, table.kr td { padding: 6px 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-bar">
+  <div class="logo"><span></span><span></span><span></span><span></span></div>
+  <div>
+    <div class="title">CoreOS FY27 OKRs — Compared (Merged)</div>
+    <div class="sub">Live tracker structure · Aug 2026 status · Owners</div>
+  </div>
+  <div class="spacer"></div>
+  <a href="https://didactic-journey-wn5j121.pages.github.io/#/fy27-okrs" target="_blank">Reference tracker ↗</a>
+  <a href="https://microsoft.sharepoint-df.com/teams/AEPWindowsPlanning/_layouts/15/Doc.aspx?sourcedoc=%7B5DA62D23-4A29-403A-BA02-756454093318%7D&file=CoreOS%20Windows%20OS%20Platform%20FY27%20Strategy.docx" target="_blank">Strategy doc ↗</a>
+</div>
+
+<div class="page">
+
+  <div class="hero">
+    <h1>CoreOS FY27 OKRs — Compared (Merged)</h1>
+    <p class="lede">
+      Merged view: CoreOS FY27 OKR set aligned to the live RoB tracker structure (4 pillars, 6 objectives, 15 KRs), with owners and Aug 2026 status per KR. Targets still marked <span style="color:var(--win-tbv); font-weight:700;">*</span> = TBV pending baseline verification.
+    </p>
+    <div class="badges">
+      <span class="badge accent">Scope: CoreOS</span>
+      <span class="badge">Horizon: FY27</span>
+      <span class="badge">Merged: 2026-07-19</span>
+      <span class="badge">Status view: Aug 2026</span>
+    </div>
+  </div>
+
+  <div class="changes">
+    <h3>Merged from live tracker</h3>
+    <ul>
+      <li>Added <strong>SFI/MSRCs (due to AI)</strong> as its own KR under O1 · fixed <strong>SRV → SFI</strong> acronym.</li>
+      <li>Promoted <strong>Neo compete</strong> to its own objective under Win vs Mac (Memory Mgmt + MPTF as its 2 KRs).</li>
+      <li>Reframed <strong>Cross-Device</strong> KR to tracker scope: "Apple AWDL, Intel-Based Windows, EOY 2026."</li>
+      <li>Added <strong>Owner (DRI)</strong> column and <strong>Status</strong> chip per KR from the Aug 2026 tracker view.</li>
+    </ul>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="label">Pillars</div><div class="value">4</div></div>
+    <div class="stat"><div class="label">Objectives</div><div class="value">6</div></div>
+    <div class="stat"><div class="label">Key Results</div><div class="value">15</div></div>
+    <div class="stat ontrack"><div class="label">On Track</div><div class="value">10</div></div>
+    <div class="stat atrisk"><div class="label">At Risk</div><div class="value">3</div></div>
+    <div class="stat waiting"><div class="label">Awaiting</div><div class="value">2</div></div>
+  </div>
+
+  <div class="legend">
+    <div><span class="status ontrack">On Track</span></div>
+    <div><span class="status atrisk">At Risk</span></div>
+    <div><span class="status waiting">Awaiting</span></div>
+    <div><span class="star">*</span> <strong>TBV</strong> — target from strategy doc; baseline not yet vetted.</div>
+  </div>
+
+  <section class="pillar">
+    <div class="pillar-head">
+      <div class="num">01</div>
+      <div class="title">Fundamentals &amp; Craft</div>
+      <div class="kr-count">6 KRs</div>
+    </div>
+    <div class="pillar-body">
+
+      <div class="obj">
+        <h3>O1. Deliver the most reliable and secure Windows OS platform.</h3>
+        <div class="src">Source: FY27 OKR slide, Fundamentals &amp; Craft — first objective. <a href="https://microsoft.sharepoint-df.com/teams/AEPWindowsPlanning/_layouts/15/Doc.aspx?sourcedoc=%7B5DA62D23-4A29-403A-BA02-756454093318%7D&file=CoreOS%20Windows%20OS%20Platform%20FY27%20Strategy.docx" target="_blank">Open ↗</a></div>
+        <table class="kr">
+          <thead><tr><th style="width:60px">#</th><th>Key Result</th><th style="width:180px">Target</th><th style="width:200px">Owner (DRI)</th><th style="width:110px">Status</th></tr></thead>
+          <tbody>
+            <tr><td class="id">KR1.1</td><td><strong>SFI/MSRCs (due to AI)</strong></td><td class="target">FY27<span class="tbv-star">*</span></td><td class="owner"><span class="avatar">?</span>TBD</td><td><span class="status waiting">Awaiting</span></td></tr>
+            <tr><td class="id">KR1.2</td><td><strong>DQI:</strong> Migrate new third-party kernel drivers to user mode / class drivers.</td><td class="target">52% by EOY CY27<span class="tbv-star">*</span></td><td class="owner"><span class="avatar">AD</span>Aacer Dakan</td><td><span class="status ontrack">On Track</span></td></tr>
+            <tr><td class="id">KR1.3</td><td><strong>DQI:</strong> Move client security drivers out of kernel — WESP adoption by Defender AV, CrowdStrike, and ≥5 other top security vendors.</td><td class="target">By end of CY27<span class="tbv-star">*</span></td><td class="owner"><span class="avatar">TL</span>Tom Lavoy</td><td><span class="status ontrack">On Track</span></td></tr>
+            <tr><td class="id">KR1.4</td><td><strong>DQI:</strong> Establish DQM as the standard ecosystem-wide quality baseline for all stacks.</td><td class="target">By 27H2<span class="tbv-star">*</span></td><td class="owner"><span class="avatar">KS</span>Krishna Srinivasa Raghavan</td><td><span class="status ontrack">On Track</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="obj">
+        <h3>O2. Lead in OS fundamentals.</h3>
+        <div class="src">Source: FY27 OKR slide, Fundamentals &amp; Craft — second objective.</div>
+        <table class="kr">
+          <thead><tr><th style="width:60px">#</th><th>Key Result</th><th style="width:180px">Target</th><th style="width:200px">Owner (DRI)</th><th style="width:110px">Status</th></tr></thead>
+          <tbody>
+            <tr><td class="id">KR2.1</td><td><strong>IO Perf:</strong> ReFS + Storage Spaces boot (opt-in): 80% faster file copies, up to 20% disk savings.</td><td class="target">FY27<span class="tbv-star">*</span></td><td class="owner"><span class="avatar">SU</span>Shelby Unger</td><td><span class="status ontrack">On Track</span></td></tr>
+            <tr><td class="id">KR2.2</td><td><strong>Power/Battery:</strong> Successful instant resume on Windows 11 devices.</td><td class="target">≥90% by end FY27<span class="tbv-star">*</span></td><td class="owner"><span class="avatar">EM</span>Ellen McGee</td><td><span class="status ontrack">On Track</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="pillar">
+    <div class="pillar-head">
+      <div class="num">02</div>
+      <div class="title">Win vs Mac</div>
+      <div class="kr-count">6 KRs</div>
+    </div>
+    <div class="pillar-body">
+
+      <div class="obj">
+        <h3>O3. Windows OS platform powers the diversity of silicon, devices, and peripherals to win back PC market leadership.</h3>
+        <div class="src">Source: FY27 OKR slide, Win vs Mac objective.</div>
+        <table class="kr">
+          <thead><tr><th style="width:60px">#</th><th>Key Result</th><th style="width:180px">Target</th><th style="width:200px">Owner (DRI)</th><th style="width:110px">Status</th></tr></thead>
+          <tbody>
+            <tr><td class="id">KR3.1</td><td><strong>UMA / Intelligent Carveout:</strong> flexibility in memory sharing between CPU and GPU for improved AI performance.</td><td class="target">Phase 1 static: 2026.8D; Phase 2 dynamic: 2027.2D<span class="tbv-star">*</span></td><td class="owner"><span class="avatar">MS</span>Marc Sweetgall</td><td><span class="status ontrack">On Track</span></td></tr>
+            <tr><td class="id">KR3.2</td><td><strong>Silicon:</strong> Deliver OS Platform for new silicon (Intel, AMD, QC, NV) to compete with Apple.</td><td class="target">Holiday '27 + early '28<span class="tbv-star">*</span></td><td class="owner"><span class="avatar">SH</span>Sandip Hiray, Sydney Hsing-I Dowdell, Marc Sweetgall</td><td><span class="status waiting">Awaiting</span></td></tr>
+            <tr><td class="id">KR3.3</td><td><strong>Cross-Device:</strong> Deliver file sharing experiences for Apple devices (AWDL, only Intel-Based Windows).</td><td class="target">EOY 2026<span class="tbv-star">*</span></td><td class="owner"><span class="avatar">DN</span>Dhanya Nair</td><td><span class="status atrisk">At Risk</span></td></tr>
+            <tr><td class="id">KR3.4</td><td><strong>Trusted Gaming Platform:</strong> Announce TGVM at GDC '27 with ≥1 ISV partner; MVP for NVIDIA GeForce RTX 50-series dGPU on Intel &amp; AMD.</td><td class="target">GDC '27 announce; 27H2 MVP<span class="tbv-star">*</span></td><td class="owner"><span class="avatar">CD</span>Chanpreet Dhanjal</td><td><span class="status atrisk">At Risk</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="obj">
+        <h3>O4. Neo compete: fast and responsive on low memory, power and cost devices.</h3>
+        <div class="src">Source: FY27 OKR slide, Win vs Mac — Neo compete objective.</div>
+        <table class="kr">
+          <thead><tr><th style="width:60px">#</th><th>Key Result</th><th style="width:180px">Target</th><th style="width:200px">Owner (DRI)</th><th style="width:110px">Status</th></tr></thead>
+          <tbody>
+            <tr><td class="id">KR4.1</td><td><strong>Memory Management:</strong> OS memory-footprint reduction for 8GB RAM configuration.</td><td class="target">October 2026 GA<span class="tbv-star">*</span></td><td class="owner"><span class="avatar">EW</span>Emily Wilson</td><td><span class="status ontrack">On Track</span></td></tr>
+            <tr><td class="id">KR4.2</td><td><strong>MPTF:</strong> standardized power + thermal framework for consistent experience and low BOM cost, targeting QC Triberg.</td><td class="target">27H2<span class="tbv-star">*</span></td><td class="owner"><span class="avatar">ML</span>Michelle Liu</td><td><span class="status ontrack">On Track</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="pillar">
+    <div class="pillar-head">
+      <div class="num">03</div>
+      <div class="title">Transition to Cloud</div>
+      <div class="kr-count">1 KR</div>
+    </div>
+    <div class="pillar-body">
+
+      <div class="obj">
+        <h3>O5. Windows OS platform enables seamless cloud-connected experiences.</h3>
+        <div class="src">Source: FY27 OKR slide, Transition to Cloud objective.</div>
+        <table class="kr">
+          <thead><tr><th style="width:60px">#</th><th>Key Result</th><th style="width:180px">Target</th><th style="width:200px">Owner (DRI)</th><th style="width:110px">Status</th></tr></thead>
+          <tbody>
+            <tr><td class="id">KR5.1</td><td><strong>Cloud PC:</strong> OS Platform for <strong>Tiete</strong>.</td><td class="target">Fall 2026 preview; April 2027 GA<span class="tbv-star">*</span></td><td class="owner"><span class="avatar">JS</span>Jeffrey Song</td><td><span class="status atrisk">At Risk</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="pillar">
+    <div class="pillar-head">
+      <div class="num">04</div>
+      <div class="title">Land AI Value</div>
+      <div class="kr-count">2 KRs</div>
+    </div>
+    <div class="pillar-body">
+
+      <div class="obj">
+        <h3>O6. Windows OS platform enables AI experience from device to developer experiences.</h3>
+        <div class="src">Source: FY27 OKR slide, Land AI Value objective.</div>
+        <table class="kr">
+          <thead><tr><th style="width:60px">#</th><th>Key Result</th><th style="width:180px">Target</th><th style="width:200px">Owner (DRI)</th><th style="width:110px">Status</th></tr></thead>
+          <tbody>
+            <tr><td class="id">KR6.1</td><td><strong>Windows Devices for AI:</strong> Make Windows the home for unmetered intelligence; deliver <strong>DGX Station / GB300</strong> Windows devices with Dell, HP, ASUS.</td><td class="target">Fall 2026 shipping<span class="tbv-star">*</span></td><td class="owner"><span class="avatar">MS</span>Marc Sweetgall</td><td><span class="status ontrack">On Track</span></td></tr>
+            <tr><td class="id">KR6.2</td><td><strong>WSL:</strong> USB pass-through, Networking, Containers — win developers back from macOS.</td><td class="target">End of CY26<span class="tbv-star">*</span></td><td class="owner"><span class="avatar">US</span>Ugan Sivagnanenthirarajah</td><td><span class="status ontrack">On Track</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    CoreOS FY27 OKRs · Compared (Merged) · 2026-07-19 · <a href="https://didactic-journey-wn5j121.pages.github.io/#/fy27-okrs" target="_blank">Reference tracker ↗</a> · <a href="https://microsoft.sharepoint-df.com/teams/AEPWindowsPlanning/_layouts/15/Doc.aspx?sourcedoc=%7B5DA62D23-4A29-403A-BA02-756454093318%7D&file=CoreOS%20Windows%20OS%20Platform%20FY27%20Strategy.docx" target="_blank">Strategy doc ↗</a>
+  </footer>
+</div>
+
+</body>
+</html>
