@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoreOS K2 Accomplishment Score — Goal = 100</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 50px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 4px solid #2E7D32;
+            padding-bottom: 25px;
+        }
+        .header h1 {
+            font-size: 36px;
+            color: #1b5e20;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .header p {
+            font-size: 15px;
+            color: #666;
+            margin: 5px 0;
+        }
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 550px;
+            margin-bottom: 40px;
+            background: linear-gradient(to bottom, #fafafa, #f5f5f5);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #2E7D32 0%, #43a047 100%);
+            color: white;
+            padding: 28px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+        .stat-card h3 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            opacity: 0.9;
+            font-weight: 600;
+        }
+        .stat-card .value {
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .stat-card .detail {
+            font-size: 13px;
+            opacity: 0.85;
+            line-height: 1.5;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .data-table th {
+            background: linear-gradient(135deg, #2E7D32 0%, #43a047 100%);
+            color: white;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .data-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e8e8e8;
+            font-size: 14px;
+        }
+        .data-table tr:hover {
+            background: #f9f9f9;
+        }
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        .week-cell {
+            font-weight: 600;
+            color: #2E7D32;
+        }
+        .score-cell {
+            font-weight: 700;
+            color: #1b5e20;
+            font-size: 15px;
+        }
+        .trend-up {
+            color: #2E7D32;
+            font-weight: 600;
+        }
+        .trend-down {
+            color: #d32f2f;
+            font-weight: 600;
+        }
+        .trend-flat {
+            color: #666;
+            font-weight: 600;
+        }
+        .insights {
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+            border-left: 5px solid #2E7D32;
+            padding: 28px;
+            border-radius: 8px;
+            margin-top: 40px;
+        }
+        .insights h3 {
+            color: #1b5e20;
+            margin-bottom: 16px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .insights ul {
+            list-style: none;
+            color: #333;
+            font-size: 14px;
+            line-height: 2;
+        }
+        .insights li {
+            margin-bottom: 10px;
+        }
+        .insights li:before {
+            content: "✓ ";
+            color: #2E7D32;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        .footnote {
+            font-size: 12px;
+            color: #999;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+        }
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 640px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CoreOS K2 Score - Goal =100</h1>
+            <p>Goal = 100 | Period: 03/18 – 07/15/2026 | Method A: RMS-Capped Accomplishment</p>
+            <p style="font-size: 13px; color: #999; margin-top: 10px;">Generated: 07/15/2026</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Baseline (03/18)</h3>
+                <div class="value">22.54</div>
+                <div class="detail">Starting point</div>
+            </div>
+            <div class="stat-card">
+                <h3>Current (07/15)</h3>
+                <div class="value">57.85</div>
+                <div class="detail">Latest score</div>
+            </div>
+            <div class="stat-card">
+                <h3>Net Gain</h3>
+                <div class="value">+35.31pp</div>
+                <div class="detail">+156.6% improvement</div>
+            </div>
+            <div class="stat-card">
+                <h3>Peak Score</h3>
+                <div class="value">57.85</div>
+                <div class="detail">06/24 (stable performance)</div>
+            </div>
+        </div>
+
+        <div class="chart-wrapper">
+            <canvas id="accomplishmentChart"></canvas>
+        </div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Week</th>
+                    <th>Accomplishment Score</th>
+                    <th>Week-over-Week Change</th>
+                    <th>Trend</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="week-cell">03/18</td>
+                    <td class="score-cell">22.54</td>
+                    <td>—</td>
+                    <td class="trend-up">↗ Baseline</td>
+                    <td>Program starting point; low baseline due to BT Discovery at 0%</td>
+                </tr>
+                <tr>
+                    <td class="week-cell">03/25</td>
+                    <td class="score-cell">39.38</td>
+                    <td>+16.84pp</td>
+                    <td class="trend-up">↗ Rapid improvement</td>
+                    <td>BT Accessory Removal reaches 100%</td>
+                </tr>
+                <tr>
+                    <td class="week-cell">04/01</td>
+                    <td class="score-cell">39.38</td>
+                    <td>0.00pp</td>
+                    <td class="trend-flat">→ Flat</td>
+                    <td>No material change in KPI actuals</td>
+                </tr>
+                <tr>
+                    <td class="week-cell">04/08</td>
+                    <td class="score-cell">48.96</td>
+                    <td>+9.58pp</td>
+                    <td class="trend-up">↗ Continued gain</td>
+                    <td>Shell Watson crashes improve (9M vs 20M goal)</td>
+                </tr>
+                <tr>
+                    <td class="week-cell">04/15</td>
+                    <td class="score-cell">48.96</td>
+                    <td>0.00pp</td>
+                    <td class="trend-flat">→ Flat</td>
+                    <td>Stable period; no KPI movement</td>
+                </tr>
+                <tr>
+                    <td class="week-cell">04/22</td>
+                    <td class="score-cell">48.96</td>
+                    <td>0.00pp</td>
+                    <td class="trend-flat">→ Flat</td>
+                    <td>Continued stabilization</td>
+                </tr>
+                <tr>
+                    <td class="week-cell">04/29</td>
+                    <td class="score-cell">49.80</td>
+                    <td>+0.84pp</td>
+                    <td class="trend-up">↗ Slight improvement</td>
+                    <td>Gradual progress across metrics</td>
+                </tr>
+                <tr>
+                    <td class="week-cell">05/06</td>
+                    <td class="score-cell">49.80</td>
+                    <td>0.00pp</td>
+                    <td class="trend-flat">→ Flat</td>
+                    <td>No change from prior week</td>
+                </tr>
+                <tr>
+                    <td class="week-cell">05/13</td>
+                    <td class="score-cell">53.31</td>
+                    <td>+3.51pp</td>
+                    <td class="trend-up">↗ Steady progress</td>
+                    <td>USB and Power improvements accumulate</td>
+                </tr>
+                <tr>
+                    <td class="week-cell">05/20</td>
+                    <td class="score-cell">53.31</td>
+                    <td>0.00pp</td>
+                    <td class="trend-flat">→ Flat</td>
+                    <td>Stabilization at mid-50s range</td>
+                </tr>
+                <tr>
+                    <td class="week-cell">05/27</td>
+                    <td class="score-cell">55.28</td>
+                    <td>+1.97pp</td>
+                    <td class="trend-up">↗ Continued climb</td>
+                    <td>Steady accumulated gains through May</td>
+                </tr>
+                <tr>
+                    <td class="week-cell">06/03</td>
+                    <td class="score-cell">55.28</td>
+                    <td>0.00pp</td>
+                    <td class="trend-flat">→ Flat</td>
+                    <td>Stable before June acceleration</td>
+                </tr>
+                <tr style="background: #f0f4f0;">
+                    <td class="week-cell">06/10</td>
+                    <td class="score-cell">55.28</td>
+                    <td>0.00pp</td>
+                    <td class="trend-flat">→ Flat</td>
+                    <td>BT Discovery at 0% (no improvement from prior week); data correction applied</td>
+                </tr>
+                <tr>
+                    <td class="week-cell">06/17</td>
+                    <td class="score-cell">56.96</td>
+                    <td>+1.68pp</td>
+                    <td class="trend-up">↗ Improvement</td>
+                    <td>BT Discovery improves to 1.5%; slight weekly gain</td>
+                </tr>
+                <tr>
+                    <td class="week-cell">06/24</td>
+                    <td class="score-cell">57.85</td>
+                    <td>+0.89pp</td>
+                    <td class="trend-up">↗ Slight recovery</td>
+                    <td>Partial stabilization; Shell Watson remains elevated</td>
+                </tr>
+                <tr style="background: #f5f5f5;">
+                    <td class="week-cell">07/15</td>
+                    <td class="score-cell">57.85</td>
+                    <td>0.00pp</td>
+                    <td class="trend-flat">→ Flat (at 2dp)</td>
+                    <td>USB just dipped below 58% for first time (57.72%); +0.48 DTT added</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="insights">
+            <h3>📊 Key Insights & Recommendations</h3>
+            <ul>
+                <li><strong>Strong Overall Momentum:</strong> +156.6% improvement over 16 weeks demonstrates sustained progress across the portfolio (22.54% → 57.85%)</li>
+                <li><strong>Stable Performance Zone:</strong> Score has been stable in the 55-58% range since late May; consistent delivery on most KPIs</li>
+                <li><strong>BT AirPods Discovery Remains Below Target:</strong> Primarily due to population calculation update from WIP to WIP+ Retail</li>
+            </ul>
+        </div>
+
+        <div class="footnote">
+            <strong>Methodology:</strong> Method A — Goal = 100 | KPI DTT% = max(0, (Goal−Actual)/Goal × 100). Overall DTT = √(Σ DTT² ÷ 5). Accomplishment = 100 − DTT. 
+            All values rounded to 2 decimals for executive reporting. Over-target KPIs capped at 100 DTT.
+        </div>
+    </div>
+
+    <script>
+        Chart.register(ChartDataLabels);
+        const ctx = document.getElementById('accomplishmentChart').getContext('2d');
+        const accomplishmentChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['03/18', '03/25', '04/01', '04/08', '04/15', '04/22', '04/29', '05/06', '05/13', '05/20', '05/27', '06/03', '06/10', '06/17', '06/24', '07/15'],
+                datasets: [{
+                    label: 'CoreOS K2 Score',
+                    data: [22.54, 39.38, 39.38, 48.96, 48.96, 48.96, 49.80, 49.80, 53.31, 53.31, 55.28, 55.28, 55.28, 56.96, 57.85, 57.85],
+                    borderColor: '#2E7D32',
+                    backgroundColor: 'rgba(46, 125, 50, 0.08)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.45,
+                    pointRadius: 7,
+                    pointBackgroundColor: '#2E7D32',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2.5,
+                    pointHoverRadius: 9,
+                    pointHoverBackgroundColor: '#1b5e20',
+                    segment: {
+                        borderDash: (ctx) => ctx.p0DataIndex === 12 ? [5, 5] : undefined,
+                    }
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    datalabels: {
+                        display: true,
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 15,
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        },
+                        color: '#fff',
+                        backgroundColor: '#2E7D32',
+                        borderRadius: 4,
+                        padding: 6,
+                        formatter: function(value) {
+                            return value.toFixed(1);
+                        }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            font: { size: 14, weight: 'bold' },
+                            color: '#333',
+                            padding: 20,
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    title: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleFont: { size: 13, weight: 'bold' },
+                        bodyFont: { size: 12 },
+                        borderColor: '#2E7D32',
+                        borderWidth: 2,
+                        callbacks: {
+                            label: function(context) {
+                                return 'Score: ' + context.parsed.y.toFixed(2);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            font: { size: 13, weight: 'bold' },
+                            callback: function(value) { return value; },
+                            stepSize: 10
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)',
+                            lineWidth: 1.5
+                        },
+                        title: {
+                            display: true,
+                            text: 'Accomplishment Score',
+                            font: { size: 14, weight: 'bold' },
+                            color: '#1b5e20',
+                            padding: 15
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: { size: 12, weight: 'bold' }
+                        },
+                        grid: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Week Ending',
+                            font: { size: 14, weight: 'bold' },
+                            color: '#1b5e20',
+                            padding: 15
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

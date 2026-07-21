@@ -4,6 +4,7 @@
 
 - **Reference tracker:** [Windows OS Platform · FY27 RoB](https://didactic-journey-wn5j121.pages.github.io/#/fy27-okrs)
 - **Strategy doc:** [CoreOS Windows OS Platform FY27 Strategy.docx](https://microsoft.sharepoint-df.com/teams/AEPWindowsPlanning/_layouts/15/Doc.aspx?sourcedoc=%7B5DA62D23-4A29-403A-BA02-756454093318%7D&file=CoreOS%20Windows%20OS%20Platform%20FY27%20Strategy.docx)
+- **Published charts:** [Weekly Accomplishment](./Weekly_Accomplishment_Score_Chart.html), [Monthly Accomplishment](./Monthly_Accomplishment_Score_Chart.html)
 - **Merged:** 2026-07-19
 
 ## Roll-up

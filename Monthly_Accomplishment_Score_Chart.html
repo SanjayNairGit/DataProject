@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoreOS K2 Score - Goal =100 (Monthly)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 50px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 4px solid #2E7D32;
+            padding-bottom: 25px;
+        }
+        .header h1 { font-size: 36px; color: #1b5e20; margin-bottom: 10px; font-weight: 700; }
+        .header p { font-size: 15px; color: #666; margin: 5px 0; }
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 520px;
+            margin-bottom: 40px;
+            background: linear-gradient(to bottom, #fafafa, #f5f5f5);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #2E7D32 0%, #43a047 100%);
+            color: white;
+            padding: 16px 10px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover { transform: translateY(-4px); }
+        .stat-card h3 { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; opacity: 0.9; font-weight: 600; }
+        .stat-card .value { font-size: 26px; font-weight: bold; margin-bottom: 4px; }
+        .stat-card .detail { font-size: 10px; opacity: 0.85; line-height: 1.4; }
+        .stat-card.partial { background: linear-gradient(135deg, #1565C0 0%, #1976D2 100%); }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .data-table th {
+            background: linear-gradient(135deg, #2E7D32 0%, #43a047 100%);
+            color: white;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .data-table td { padding: 14px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px; }
+        .data-table tr:hover { background: #f9f9f9; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .month-cell { font-weight: 700; color: #2E7D32; font-size: 15px; }
+        .score-cell { font-weight: 700; color: #1b5e20; font-size: 16px; }
+        .trend-up { color: #2E7D32; font-weight: 600; }
+        .trend-flat { color: #666; font-weight: 600; }
+        .partial-note { background: #e3f2fd; color: #1565C0; font-size: 12px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+        .insights {
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+            border-left: 5px solid #2E7D32;
+            padding: 28px;
+            border-radius: 8px;
+            margin-top: 40px;
+        }
+        .insights h3 { color: #1b5e20; margin-bottom: 16px; font-size: 18px; font-weight: 700; }
+        .insights ul { list-style: none; color: #333; font-size: 14px; line-height: 2; }
+        .insights li { margin-bottom: 10px; }
+        .insights li:before { content: "✓ "; color: #2E7D32; font-weight: bold; margin-right: 10px; font-size: 16px; }
+        .footnote {
+            font-size: 12px; color: #999; margin-top: 40px;
+            padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CoreOS K2 Score - Goal =100</h1>
+            <p>Goal = 100 | Monthly View (Last Week of Month) | Method A: RMS-Capped Accomplishment</p>
+            <p style="font-size: 13px; color: #999; margin-top: 10px;">Generated: 07/15/2026</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Mar Start</h3>
+                <div class="value">22.54</div>
+                <div class="detail">Week of 03/18</div>
+            </div>
+            <div class="stat-card">
+                <h3>Mar End</h3>
+                <div class="value">39.38</div>
+                <div class="detail">Week of 03/25</div>
+            </div>
+            <div class="stat-card">
+                <h3>April</h3>
+                <div class="value">48.96</div>
+                <div class="detail">Week of 04/22</div>
+            </div>
+            <div class="stat-card">
+                <h3>May</h3>
+                <div class="value">55.28</div>
+                <div class="detail">Week of 05/27</div>
+            </div>
+            <div class="stat-card">
+                <h3>June</h3>
+                <div class="value">57.85</div>
+                <div class="detail">Week of 06/24</div>
+            </div>
+            <div class="stat-card">
+                <h3>July (Partial)</h3>
+                <div class="value">57.85</div>
+                <div class="detail">Week of 07/15</div>
+            </div>
+        </div>
+
+        <div class="chart-wrapper">
+            <canvas id="monthlyChart"></canvas>
+        </div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Reference Week</th>
+                    <th>Score</th>
+                    <th>Month-over-Month Change</th>
+                    <th>Trend</th>
+                    <th>Key Driver</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="month-cell">March (Start)</td>
+                    <td>03/18</td>
+                    <td class="score-cell">22.54</td>
+                    <td>—</td>
+                    <td class="trend-up">↗ Opening baseline</td>
+                    <td>BT Discovery 0%; Shell Watson 0; BT Removal not yet active</td>
+                </tr>
+                <tr>
+                    <td class="month-cell">March (End)</td>
+                    <td>03/25</td>
+                    <td class="score-cell">39.38</td>
+                    <td>—</td>
+                    <td class="trend-up">↗ Baseline</td>
+                    <td>BT Discovery at 0%; Shell Watson below target</td>
+                </tr>
+                <tr>
+                    <td class="month-cell">April</td>
+                    <td>04/22</td>
+                    <td class="score-cell">48.96</td>
+                    <td>+9.58</td>
+                    <td class="trend-up">↗ Continued gain</td>
+                    <td>Shell Watson improves from 1.7M to 9M hits</td>
+                </tr>
+                <tr>
+                    <td class="month-cell">May</td>
+                    <td>05/27</td>
+                    <td class="score-cell">55.28</td>
+                    <td>+6.32</td>
+                    <td class="trend-up">↗ Steady climb</td>
+                    <td>Shell Watson crosses 20M goal; USB and Power stable</td>
+                </tr>
+                <tr>
+                    <td class="month-cell">June</td>
+                    <td>06/24</td>
+                    <td class="score-cell">57.85</td>
+                    <td>+2.57</td>
+                    <td class="trend-up">↗ Continued improvement</td>
+                    <td>BT Discovery shows first signs (2.3%); other KPIs stable</td>
+                </tr>
+                <tr style="background: #f0f4f0;">
+                    <td class="month-cell">July <span class="partial-note">Partial</span></td>
+                    <td>07/15</td>
+                    <td class="score-cell">57.85</td>
+                    <td>0.00</td>
+                    <td class="trend-flat">→ Flat (1 week only)</td>
+                    <td>USB dipped just below target (57.72 vs 58 goal)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="insights">
+            <h3>📊 Key Insights</h3>
+            <ul>
+                <li><strong>Consistent Monthly Improvement:</strong> Score grew every month from March (39.38) through June (57.85) — a +18.47 point gain over 4 months</li>
+                <li><strong>Strongest MoM Gain:</strong> March → April (+9.58) driven by Shell Watson crash reduction crossing toward the 20M target</li>
+                <li><strong>Growth Slowing:</strong> Monthly delta is narrowing (9.58 → 6.32 → 2.57); BT Discovery is the primary remaining gap to unlock next leg of improvement</li>
+                <li><strong>BT AirPods Discovery Remains Below Target:</strong> Primarily due to population calculation update from WIP to WIP+ Retail</li>
+            </ul>
+        </div>
+
+        <div class="footnote">
+            <strong>Methodology:</strong> Method A — Goal = 100 | KPI DTT% = max(0, (Goal−Actual)/Goal × 100). Overall DTT = √(Σ DTT² ÷ 5). Accomplishment = 100 − DTT.
+            Monthly values use last available week of each month. All values rounded to 2 decimals. Over-target KPIs capped at 100 DTT.
+        </div>
+    </div>
+
+    <script>
+        Chart.register(ChartDataLabels);
+        const ctx = document.getElementById('monthlyChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Mar Start\n(03/18)', 'Mar End\n(03/25)', 'April\n(04/22)', 'May\n(05/27)', 'June\n(06/24)', 'July\n(07/15)*'],
+                datasets: [
+                    {
+                        label: 'CoreOS K2 Score',
+                        data: [22.54, 39.38, 48.96, 55.28, 57.85, 57.85],
+                        borderColor: '#2E7D32',
+                        backgroundColor: 'rgba(46, 125, 50, 0.08)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 8,
+                        pointBackgroundColor: ['#2E7D32','#2E7D32','#2E7D32','#2E7D32','#2E7D32','#2E7D32'],
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2.5,
+                        pointHoverRadius: 10,
+                        datalabels: {
+                            display: true,
+                            anchor: 'end',
+                            align: 'top',
+                            offset: 15,
+                            font: { size: 13, weight: 'bold' },
+                            color: '#fff',
+                            backgroundColor: function(ctx) {
+                                return '#2E7D32';
+                            },
+                            borderRadius: 4,
+                            padding: 6,
+                            formatter: function(value) { return value.toFixed(2); }
+                        }
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: { font: { size: 13, weight: 'bold' }, color: '#333', padding: 20, usePointStyle: true }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        padding: 12,
+                        titleFont: { size: 13, weight: 'bold' },
+                        bodyFont: { size: 12 },
+                        borderColor: '#2E7D32',
+                        borderWidth: 2,
+                        callbacks: {
+                            label: function(context) {
+                                return 'Score: ' + context.parsed.y.toFixed(2);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: { font: { size: 13, weight: 'bold' }, stepSize: 10 },
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        title: { display: true, text: 'Accomplishment Score', font: { size: 14, weight: 'bold' }, color: '#1b5e20', padding: 15 }
+                    },
+                    x: {
+                        ticks: { font: { size: 12, weight: 'bold' } },
+                        grid: { display: false },
+                        title: { display: true, text: 'Month', font: { size: 14, weight: 'bold' }, color: '#1b5e20', padding: 15 }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
